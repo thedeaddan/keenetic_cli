@@ -22,13 +22,13 @@ class ssh():
 		client.connect(hostname=host, username=user, password=secret, port=port)
 		stdin, stdout, stderr = client.exec_command(command)
 		client.close()
-		
+
 class menu():
 	def show():
 		os.system("cls")
 		global selected
 		print("Управление роутером Keenetic:")
-		for i in range(1, 5):
+		for i in range(1, 7):
 			if i == 1:
 				text = "Включить VPN клиент"
 			elif i == 2:
@@ -37,6 +37,10 @@ class menu():
 				text = "Открыть Админ-Панель"
 			elif i == 4:
 				text = "Открыть SSH"
+			elif i == 5:
+				text = "Перезагрузить Keenetic"
+			elif i == 6:
+				text = "Выход"
 			print("{1} {0}.{3} {2}".format(i, ">" if selected == i else " ", "<" if selected == i else " ",text))
 
 	def up():
@@ -48,7 +52,7 @@ class menu():
 
 	def down():
 		global selected
-		if selected == 4:
+		if selected == 6:
 			return
 		selected += 1
 		menu.show()
@@ -85,6 +89,14 @@ class menu():
 		if selected == 4:
 			print("Пароль: "+secret)
 			os.system(f'ssh -p {port} {user}@{host}')
+		if selected == 5:
+			print("Отправляю Keenetic на перезагрузку")
+			time.sleep(3)
+			ssh.send_command("system reboot")
+		if selected == 6:
+			print("Закрываюсь..")
+			time.sleep(2)
+			os._exit(0)
 
 menu.show()
 keyboard.add_hotkey('up', menu.up)
